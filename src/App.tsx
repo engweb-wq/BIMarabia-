@@ -19,13 +19,38 @@ import { VideoModal } from './components/VideoModal';
 import { BookModal } from './components/BookModal';
 import { SavedDrawer } from './components/SavedDrawer';
 import { Footer } from './components/Footer';
+import { RecentEntry, RecentlyViewed } from './components/RecentlyViewed';
+import { ProgressOverview } from './components/ProgressOverview';
+
+interface RecentItemRef {
+  kind: 'video' | 'book';
+  id: string;
+}
 
 const STORAGE_KEYS = {
   savedVideos: 'bimarabia_saved_videos_v1',
   savedBooks: 'bimarabia_saved_books_v1',
   watchedLessons: 'bimarabia_watched_lessons_v1',
   readChapters: 'bimarabia_read_chapters_v1',
+  recentlyViewed: 'bimarabia_recently_viewed_v1',
 };
+
+function readRecentStorage(): RecentItemRef[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.recentlyViewed);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (item): item is RecentItemRef =>
+        Boolean(item) &&
+        (item.kind === 'video' || item.kind === 'book') &&
+        typeof item.id === 'string'
+    ).slice(0, 5);
+  } catch {
+    return [];
+  }
+}
 
 function readStorageArray(key: string): string[] {
   try {
@@ -54,6 +79,9 @@ export default function App() {
   );
   const [readChapterKeys, setReadChapterKeys] = useState<string[]>(() =>
     readStorageArray(STORAGE_KEYS.readChapters)
+  );
+  const [recentRefs, setRecentRefs] = useState<RecentItemRef[]>(() =>
+    readRecentStorage()
   );
 
   const [selectedVideo, setSelectedVideo] = useState<VideoCourse | null>(null);
@@ -91,6 +119,14 @@ export default function App() {
       // Ignore storage quota errors
     }
   }, [readChapterKeys]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.recentlyViewed, JSON.stringify(recentRefs));
+    } catch {
+      // Ignore storage quota errors
+    }
+  }, [recentRefs]);
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
@@ -179,6 +215,37 @@ export default function App() {
     );
   };
 
+  const recordRecentItem = (kind: 'video' | 'book', id: string) => {
+    setRecentRefs((prev) => [
+      { kind, id },
+      ...prev.filter((entry) => !(entry.kind === kind && entry.id === id)),
+    ].slice(0, 5));
+  };
+
+  const handleSelectVideo = (course: VideoCourse) => {
+    recordRecentItem('video', course.id);
+    setSelectedVideo(course);
+  };
+
+  const handleSelectBook = (book: BimBook) => {
+    recordRecentItem('book', book.id);
+    setSelectedBook(book);
+  };
+
+  const recentEntries = useMemo<RecentEntry[]>(() => {
+    const resolved: RecentEntry[] = [];
+    for (const ref of recentRefs) {
+      if (ref.kind === 'video') {
+        const course = VIDEO_COURSES.find((v) => v.id === ref.id);
+        if (course) resolved.push({ kind: 'video', item: course });
+      } else {
+        const book = BIM_BOOKS.find((b) => b.id === ref.id);
+        if (book) resolved.push({ kind: 'book', item: book });
+      }
+    }
+    return resolved;
+  }, [recentRefs]);
+
   const resetFilters = () => {
     setSearchQuery('');
     setContentKind('all');
@@ -210,12 +277,32 @@ export default function App() {
       />
 
       <main className="flex-1">
+        <RecentlyViewed
+          entries={recentEntries}
+          onSelectVideo={handleSelectVideo}
+          onSelectBook={handleSelectBook}
+          onClear={() => setRecentRefs([])}
+        />
+
         <Hero
           onBrowseVideos={() => {
             setContentKind('all');
             scrollToSection('videos');
           }}
           onBrowseBooks={() => {
+            setContentKind('all');
+            scrollToSection('books');
+          }}
+        />
+
+        <ProgressOverview
+          watchedLessonIds={watchedLessonIds}
+          readChapterKeys={readChapterKeys}
+          onJumpToVideos={() => {
+            setContentKind('all');
+            scrollToSection('videos');
+          }}
+          onJumpToBooks={() => {
             setContentKind('all');
             scrollToSection('books');
           }}
@@ -260,7 +347,7 @@ export default function App() {
               savedVideoIds={savedVideoIds}
               watchedLessonIds={watchedLessonIds}
               onToggleSaveVideo={toggleSaveVideo}
-              onSelectCourse={setSelectedVideo}
+              onSelectCourse={handleSelectVideo}
             />
 
             <BookSection
@@ -269,7 +356,7 @@ export default function App() {
               savedBookIds={savedBookIds}
               readChapterKeys={readChapterKeys}
               onToggleSaveBook={toggleSaveBook}
-              onSelectBook={setSelectedBook}
+              onSelectBook={handleSelectBook}
             />
 
             <MagazineArchive issues={filteredIssues} searchQuery={searchQuery} />
@@ -310,8 +397,8 @@ export default function App() {
         savedVideos={savedVideos}
         savedBooks={savedBooks}
         onClose={() => setSavedDrawerOpen(false)}
-        onSelectVideo={setSelectedVideo}
-        onSelectBook={setSelectedBook}
+        onSelectVideo={handleSelectVideo}
+        onSelectBook={handleSelectBook}
         onRemoveVideo={toggleSaveVideo}
         onRemoveBook={toggleSaveBook}
       />
