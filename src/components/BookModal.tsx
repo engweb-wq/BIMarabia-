@@ -1,16 +1,25 @@
 import { useEffect, useState } from 'react';
-import { Bookmark, ExternalLink, X } from 'lucide-react';
+import { Bookmark, Check, ExternalLink, X } from 'lucide-react';
 import { BimBook } from '../data/catalog';
 import { BookCoverArtwork } from './CoverArtwork';
 
 interface BookModalProps {
   book: BimBook | null;
   isSaved: boolean;
+  readChapterKeys: string[];
   onToggleSave: (id: string) => void;
+  onToggleReadChapter: (chapterKey: string) => void;
   onClose: () => void;
 }
 
-export function BookModal({ book, isSaved, onToggleSave, onClose }: BookModalProps) {
+export function BookModal({
+  book,
+  isSaved,
+  readChapterKeys,
+  onToggleSave,
+  onToggleReadChapter,
+  onClose,
+}: BookModalProps) {
   const [activeChapterIdx, setActiveChapterIdx] = useState(0);
 
   useEffect(() => {
@@ -29,6 +38,11 @@ export function BookModal({ book, isSaved, onToggleSave, onClose }: BookModalPro
   if (!book) return null;
 
   const activeChapter = book.chapters[activeChapterIdx] ?? book.chapters[0];
+  const activeChapterKey = `${book.id}::${activeChapter.number}`;
+  const isActiveChapterRead = readChapterKeys.includes(activeChapterKey);
+  const readCountInBook = book.chapters.filter((ch) =>
+    readChapterKeys.includes(`${book.id}::${ch.number}`)
+  ).length;
 
   return (
     <div
@@ -53,6 +67,10 @@ export function BookModal({ book, isSaved, onToggleSave, onClose }: BookModalPro
               <span>{book.disciplineLabel}</span>
               <span aria-hidden="true">·</span>
               <span>{book.edition}</span>
+              <span aria-hidden="true">·</span>
+              <span className="font-mono tabular-nums">
+                {readCountInBook}/{book.chapters.length} فصول مقروءة
+              </span>
             </div>
             <h2
               id="book-modal-title"
@@ -145,6 +163,8 @@ export function BookModal({ book, isSaved, onToggleSave, onClose }: BookModalPro
               <div className="border border-[#E5E2DA] rounded-xl divide-y divide-[#ECEAE2] bg-white overflow-hidden">
                 {book.chapters.map((chapter, idx) => {
                   const active = idx === activeChapterIdx;
+                  const chapterKey = `${book.id}::${chapter.number}`;
+                  const isRead = readChapterKeys.includes(chapterKey);
                   return (
                     <button
                       key={chapter.number}
@@ -167,22 +187,44 @@ export function BookModal({ book, isSaved, onToggleSave, onClose }: BookModalPro
                       >
                         {chapter.title}
                       </div>
+                      {isRead && (
+                        <div className="mt-1 text-[11px] font-medium text-[#0F766E]">
+                          مقروء ✓
+                        </div>
+                      )}
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            <div className="md:col-span-7 bg-white border border-[#E5E2DA] rounded-xl p-6">
-              <div className="text-xs font-mono text-[#525866] mb-2">
-                مقتطف للقراءة · {activeChapter.number} (ص {activeChapter.pages})
+            <div className="md:col-span-7 bg-white border border-[#E5E2DA] rounded-xl p-6 flex flex-col justify-between gap-6">
+              <div>
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
+                  <div className="text-xs font-mono text-[#525866]">
+                    مقتطف للقراءة · {activeChapter.number} (ص {activeChapter.pages})
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onToggleReadChapter(activeChapterKey)}
+                    aria-pressed={isActiveChapterRead}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border transition-colors cursor-pointer whitespace-nowrap shrink-0 ${
+                      isActiveChapterRead
+                        ? 'bg-[#0F766E]/10 border-[#0F766E]/30 text-[#0F766E]'
+                        : 'bg-white border-[#D4D0C5] text-[#141923] hover:border-[#0B4F8A]'
+                    }`}
+                  >
+                    <Check className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>{isActiveChapterRead ? 'تمت قراءة الفصل' : 'تحديد كمقروء'}</span>
+                  </button>
+                </div>
+                <h4 className="text-lg font-bold text-[#141923] pb-3 border-b border-[#ECEAE2]">
+                  {activeChapter.title}
+                </h4>
+                <p className="mt-4 text-base text-[#272D38] leading-loose max-w-prose">
+                  {activeChapter.excerpt}
+                </p>
               </div>
-              <h4 className="text-lg font-bold text-[#141923] pb-3 border-b border-[#ECEAE2]">
-                {activeChapter.title}
-              </h4>
-              <p className="mt-4 text-base text-[#272D38] leading-loose max-w-prose">
-                {activeChapter.excerpt}
-              </p>
             </div>
           </div>
         </div>

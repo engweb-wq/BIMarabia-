@@ -24,6 +24,7 @@ const STORAGE_KEYS = {
   savedVideos: 'bimarabia_saved_videos_v1',
   savedBooks: 'bimarabia_saved_books_v1',
   watchedLessons: 'bimarabia_watched_lessons_v1',
+  readChapters: 'bimarabia_read_chapters_v1',
 };
 
 function readStorageArray(key: string): string[] {
@@ -50,6 +51,9 @@ export default function App() {
   );
   const [watchedLessonIds, setWatchedLessonIds] = useState<string[]>(() =>
     readStorageArray(STORAGE_KEYS.watchedLessons)
+  );
+  const [readChapterKeys, setReadChapterKeys] = useState<string[]>(() =>
+    readStorageArray(STORAGE_KEYS.readChapters)
   );
 
   const [selectedVideo, setSelectedVideo] = useState<VideoCourse | null>(null);
@@ -79,6 +83,14 @@ export default function App() {
       // Ignore storage quota errors
     }
   }, [watchedLessonIds]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.readChapters, JSON.stringify(readChapterKeys));
+    } catch {
+      // Ignore storage quota errors
+    }
+  }, [readChapterKeys]);
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
@@ -158,6 +170,12 @@ export default function App() {
   const toggleWatchedLesson = (lessonId: string) => {
     setWatchedLessonIds((prev) =>
       prev.includes(lessonId) ? prev.filter((id) => id !== lessonId) : [...prev, lessonId]
+    );
+  };
+
+  const toggleReadChapter = (chapterKey: string) => {
+    setReadChapterKeys((prev) =>
+      prev.includes(chapterKey) ? prev.filter((key) => key !== chapterKey) : [...prev, chapterKey]
     );
   };
 
@@ -249,6 +267,7 @@ export default function App() {
               books={filteredBooks}
               searchQuery={searchQuery}
               savedBookIds={savedBookIds}
+              readChapterKeys={readChapterKeys}
               onToggleSaveBook={toggleSaveBook}
               onSelectBook={setSelectedBook}
             />
@@ -280,7 +299,9 @@ export default function App() {
       <BookModal
         book={selectedBook}
         isSaved={selectedBook ? savedBookIds.includes(selectedBook.id) : false}
+        readChapterKeys={readChapterKeys}
         onToggleSave={toggleSaveBook}
+        onToggleReadChapter={toggleReadChapter}
         onClose={() => setSelectedBook(null)}
       />
 

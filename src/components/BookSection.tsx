@@ -7,6 +7,7 @@ interface BookSectionProps {
   books: BimBook[];
   searchQuery: string;
   savedBookIds: string[];
+  readChapterKeys: string[];
   onToggleSaveBook: (id: string) => void;
   onSelectBook: (book: BimBook) => void;
 }
@@ -15,6 +16,7 @@ export function BookSection({
   books,
   searchQuery,
   savedBookIds,
+  readChapterKeys,
   onToggleSaveBook,
   onSelectBook,
 }: BookSectionProps) {
@@ -42,6 +44,9 @@ export function BookSection({
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {books.map((book) => {
             const isSaved = savedBookIds.includes(book.id);
+            const readChaptersCount = book.chapters.filter((ch) =>
+              readChapterKeys.includes(`${book.id}::${ch.number}`)
+            ).length;
 
             return (
               <article
@@ -86,6 +91,12 @@ export function BookSection({
                     <p className="mt-3 text-xs text-[#454B57]">
                       تأليف: <span className="font-medium text-[#141923]">{book.author}</span>
                     </p>
+
+                    {readChaptersCount > 0 && (
+                      <div className="mt-2 text-xs text-[#0F766E] font-mono tabular-nums">
+                        تمت قراءة {readChaptersCount} من {book.chapters.length} فصول
+                      </div>
+                    )}
                   </div>
 
                   <div className="mt-4 pt-3.5 border-t border-[#ECEAE2] flex items-center justify-between gap-2">
