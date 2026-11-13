@@ -44,7 +44,7 @@ export function CatalogControls({
               type="search"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="ابحث عن كتاب، دورة فيديو، Revit، Dynamo، Navisworks، ISO 19650..."
+              placeholder="ابحث عن كتاب أو فيديو: ISO 19650، COBie، Python، Dynamo، Civil 3D، Forma، Rhino..."
               aria-label="ابحث في الفيديوهات والكتب والمجلة"
               className="w-full pr-10 pl-10 py-2.5 text-sm bg-white text-[#141923] placeholder:text-[#7A8190] border border-[#D4D0C5] rounded-lg focus:outline-none focus:border-[#0B4F8A] focus:ring-2 focus:ring-[#0B4F8A]/15 transition-colors"
             />

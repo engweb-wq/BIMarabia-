@@ -1,9 +1,18 @@
 import { useState } from 'react';
-import { Bookmark, Play } from 'lucide-react';
-import { VideoCourse } from '../data/catalog';
+import { Bookmark, ExternalLink, Play } from 'lucide-react';
+import {
+  CHANNEL_URLS,
+  DisciplineKey,
+  TECHNICAL_PILLARS,
+  VideoCourse,
+} from '../data/catalog';
+import { HighlightText } from './HighlightText';
 
 interface VideoSectionProps {
   courses: VideoCourse[];
+  searchQuery: string;
+  activeDiscipline: DisciplineKey;
+  onSelectDiscipline: (discipline: DisciplineKey) => void;
   savedVideoIds: string[];
   watchedLessonIds: string[];
   onToggleSaveVideo: (id: string) => void;
@@ -12,6 +21,9 @@ interface VideoSectionProps {
 
 export function VideoSection({
   courses,
+  searchQuery,
+  activeDiscipline,
+  onSelectDiscipline,
   savedVideoIds,
   watchedLessonIds,
   onToggleSaveVideo,
@@ -29,15 +41,64 @@ export function VideoSection({
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#E5E2DA]">
           <div>
             <p className="text-xs font-medium text-[#525866] mb-1.5">
-              القسم 01 · السلاسل المرئية والدورات التطبيقية
+              القسم 01 · قناة @omar_selim1 على يوتيوب والسلاسل التطبيقية
             </p>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#141923]">
-              مكتبة الفيديوهات والشروحات
+              مكتبة الفيديوهات والمحاور التقنية
             </h2>
           </div>
-          <p className="text-sm text-[#525866] font-mono tabular-nums">
-            {courses.length} سلاسل تعليمية متكاملة
-          </p>
+
+          <div className="flex flex-wrap items-center gap-4 text-sm">
+            <span className="text-[#525866] font-mono tabular-nums">
+              {courses.length} سلاسل تعليمية
+            </span>
+            <a
+              href={CHANNEL_URLS.videos}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-semibold text-[#0B4F8A] hover:underline underline-offset-4 whitespace-nowrap"
+            >
+              <span>كل فيديوهات القناة</span>
+              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+
+        {/* Interactive 5 Technical Pillars Strip */}
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          {TECHNICAL_PILLARS.map((pillar) => {
+            const isActive = activeDiscipline === pillar.discipline;
+            return (
+              <button
+                key={pillar.id}
+                type="button"
+                onClick={() =>
+                  onSelectDiscipline(isActive ? 'all' : pillar.discipline)
+                }
+                aria-pressed={isActive}
+                className={`text-right p-4 rounded-xl border transition-colors cursor-pointer flex flex-col justify-between gap-2 ${
+                  isActive
+                    ? 'bg-[#0B4F8A] text-white border-[#0B4F8A]'
+                    : 'bg-white text-[#141923] border-[#E5E2DA] hover:border-[#0B4F8A]'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2 text-xs font-mono tabular-nums">
+                  <span className={isActive ? 'text-white/85' : 'text-[#0B4F8A]'}>
+                    المحور {pillar.number}
+                  </span>
+                  {isActive && <span className="text-[11px]">مفعّل</span>}
+                </div>
+                <div className="text-sm font-bold leading-snug">{pillar.title}</div>
+                <div
+                  className={`text-[11px] font-mono leading-relaxed ${
+                    isActive ? 'text-white/80' : 'text-[#525866]'
+                  }`}
+                >
+                  {pillar.tools}
+                </div>
+              </button>
+            );
+          })}
         </div>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -114,12 +175,12 @@ export function VideoSection({
                         onClick={() => onSelectCourse(course)}
                         className="text-right hover:text-[#0B4F8A] transition-colors cursor-pointer"
                       >
-                        {course.title}
+                        <HighlightText text={course.title} query={searchQuery} />
                       </button>
                     </h3>
 
                     <p className="mt-2 text-sm text-[#525866] leading-relaxed line-clamp-2">
-                      {course.subtitle}
+                      <HighlightText text={course.subtitle} query={searchQuery} />
                     </p>
                   </div>
 

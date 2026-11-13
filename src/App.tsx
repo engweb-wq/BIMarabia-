@@ -236,6 +236,9 @@ export default function App() {
           <>
             <VideoSection
               courses={filteredVideos}
+              searchQuery={searchQuery}
+              activeDiscipline={discipline}
+              onSelectDiscipline={setDiscipline}
               savedVideoIds={savedVideoIds}
               watchedLessonIds={watchedLessonIds}
               onToggleSaveVideo={toggleSaveVideo}
@@ -244,12 +247,13 @@ export default function App() {
 
             <BookSection
               books={filteredBooks}
+              searchQuery={searchQuery}
               savedBookIds={savedBookIds}
               onToggleSaveBook={toggleSaveBook}
               onSelectBook={setSelectedBook}
             />
 
-            <MagazineArchive issues={filteredIssues} />
+            <MagazineArchive issues={filteredIssues} searchQuery={searchQuery} />
           </>
         )}
 

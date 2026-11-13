@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { ChevronDown, ExternalLink } from 'lucide-react';
 import { MagazineIssue } from '../data/catalog';
+import { HighlightText } from './HighlightText';
 
 interface MagazineArchiveProps {
   issues: MagazineIssue[];
+  searchQuery: string;
 }
 
-export function MagazineArchive({ issues }: MagazineArchiveProps) {
+export function MagazineArchive({ issues, searchQuery }: MagazineArchiveProps) {
   const [expandedId, setExpandedId] = useState<string | null>(issues[0]?.id ?? null);
 
   if (issues.length === 0) {
@@ -27,12 +29,12 @@ export function MagazineArchive({ issues }: MagazineArchiveProps) {
           </div>
 
           <a
-            href="https://bimarabia.com/book"
+            href="http://bimarabia.com/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm font-medium text-[#0B4F8A] hover:underline underline-offset-4 whitespace-nowrap shrink-0"
           >
-            <span>زيارة أرشيف المجلة الكامل</span>
+            <span>زيارة أرشيف المجلة على bimarabia.com</span>
             <ExternalLink className="w-4 h-4" aria-hidden="true" />
           </a>
         </div>
@@ -56,9 +58,11 @@ export function MagazineArchive({ issues }: MagazineArchiveProps) {
                     </span>
                     <div className="min-w-0">
                       <h3 className="text-base font-bold text-[#141923] truncate">
-                        {issue.title}
+                        <HighlightText text={issue.title} query={searchQuery} />
                       </h3>
-                      <p className="text-xs text-[#525866] mt-0.5 truncate">{issue.theme}</p>
+                      <p className="text-xs text-[#525866] mt-0.5 truncate">
+                        <HighlightText text={issue.theme} query={searchQuery} />
+                      </p>
                     </div>
                   </div>
 
@@ -89,7 +93,9 @@ export function MagazineArchive({ issues }: MagazineArchiveProps) {
                               <span className="font-mono text-xs text-[#0B4F8A] mt-0.5 tabular-nums">
                                 0{idx + 1}.
                               </span>
-                              <span>{article}</span>
+                              <span>
+                                <HighlightText text={article} query={searchQuery} />
+                              </span>
                             </li>
                           ))}
                         </ul>

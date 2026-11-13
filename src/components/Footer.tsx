@@ -1,52 +1,96 @@
 import { ExternalLink } from 'lucide-react';
+import { OFFICIAL_LINKS } from '../data/catalog';
 
 export function Footer() {
+  const platformLinks = OFFICIAL_LINKS.filter((l) => l.group === 'platforms');
+  const socialLinks = OFFICIAL_LINKS.filter((l) => l.group === 'social');
+  const academicLinks = OFFICIAL_LINKS.filter((l) => l.group === 'academic');
+
   return (
     <footer className="bg-white border-t border-[#E5E2DA]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <div className="text-lg font-bold text-[#141923]">BIMarabia · بيم أرابيا</div>
-            <p className="mt-1.5 text-sm text-[#525866] max-w-lg leading-relaxed">
-              مبادرة عربية تطوعية لنشر علوم نمذجة معلومات البناء (BIM) والتحول الرقمي في التشييد
-              عبر الكتب المجانية، مجلة بيم أرابيا، وسلاسل الشروحات المرئية.
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-10 border-b border-[#ECEAE2]">
+          {/* Brand Summary */}
+          <div className="lg:col-span-4 space-y-3">
+            <div className="text-xl font-bold text-[#141923]">BIMarabia · بيم أرابيا</div>
+            <p className="text-sm text-[#525866] leading-relaxed">
+              منصة ومبادرة تعليمية متخصصة في تكنولوجيا البناء ونمذجة معلومات البناء (BIM) بإشراف
+              م. عمر سليم، لدعم محترفي قطاع الهندسة والتشييد (AEC) باللغة العربية.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-6 text-sm text-[#454B57]">
-            <a
-              href="https://bimarabia.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 hover:text-[#0B4F8A] transition-colors whitespace-nowrap"
-            >
-              <span>الموقع الرسمي bimarabia.com</span>
-              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-            </a>
-            <a
-              href="https://bimarabia.com/book"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 hover:text-[#0B4F8A] transition-colors whitespace-nowrap"
-            >
-              <span>مكتبة الكتب والمجلة</span>
-              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-            </a>
-            <a
-              href="https://www.youtube.com/@BIMarabia"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 hover:text-[#0B4F8A] transition-colors whitespace-nowrap"
-            >
-              <span>قناة يوتيوب بيم أرابيا</span>
-              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-            </a>
+          {/* 3 Link Columns */}
+          <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div>
+              <h3 className="text-xs font-bold text-[#141923] pb-2.5 border-b border-[#ECEAE2]">
+                القنوات والمنصات التعليمية
+              </h3>
+              <ul className="mt-3 space-y-2.5">
+                {platformLinks.map((link) => (
+                  <li key={link.id}>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center justify-between gap-2 text-xs text-[#454B57] hover:text-[#0B4F8A] transition-colors"
+                    >
+                      <span className="font-medium truncate">{link.label}</span>
+                      <ExternalLink className="w-3 h-3 shrink-0 opacity-60 group-hover:opacity-100" aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-xs font-bold text-[#141923] pb-2.5 border-b border-[#ECEAE2]">
+                الشبكات المهنية والتواصل
+              </h3>
+              <ul className="mt-3 space-y-2.5">
+                {socialLinks.map((link) => (
+                  <li key={link.id}>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center justify-between gap-2 text-xs text-[#454B57] hover:text-[#0B4F8A] transition-colors"
+                    >
+                      <span className="font-medium truncate">{link.label}</span>
+                      <span className="font-mono text-[11px] text-[#6B7280] group-hover:text-[#0B4F8A] truncate">
+                        {link.handle}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-xs font-bold text-[#141923] pb-2.5 border-b border-[#ECEAE2]">
+                الأبحاث والمدونات والروابط
+              </h3>
+              <ul className="mt-3 space-y-2.5">
+                {academicLinks.map((link) => (
+                  <li key={link.id}>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center justify-between gap-2 text-xs text-[#454B57] hover:text-[#0B4F8A] transition-colors"
+                    >
+                      <span className="font-medium truncate">{link.label}</span>
+                      <ExternalLink className="w-3 h-3 shrink-0 opacity-60 group-hover:opacity-100" aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-[#ECEAE2] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#6B7280]">
-          <span>بوابة المعرفة الهندسية العربية · BIMarabia</span>
-          <span>متاح لجميع المهندسين والباحثين مجاناً</span>
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#6B7280]">
+          <span>مبادرة بيم أرابيا · BIMarabia · م. عمر سليم</span>
+          <span className="font-mono">youtube.com/@omar_selim1 · bimarabia.com</span>
         </div>
       </div>
     </footer>

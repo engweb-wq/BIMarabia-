@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Bookmark, Check, ExternalLink, Play, X } from 'lucide-react';
-import { VideoCourse } from '../data/catalog';
+import { CHANNEL_URLS, VideoCourse } from '../data/catalog';
 
 interface VideoModalProps {
   course: VideoCourse | null;
@@ -232,6 +232,17 @@ export function VideoModal({
             </div>
 
             <p className="mt-3 text-xs text-[#525866] leading-relaxed">{course.description}</p>
+            <div className="mt-2.5 flex items-center justify-between gap-2 text-xs">
+              <a
+                href={CHANNEL_URLS.subscribe}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-semibold text-[#0B4F8A] hover:underline"
+              >
+                <span>اشترك في قناة @omar_selim1</span>
+                <ExternalLink className="w-3 h-3" aria-hidden="true" />
+              </a>
+            </div>
 
             <div className="mt-4 divide-y divide-[#ECEAE2] border border-[#E5E2DA] rounded-xl overflow-hidden">
               {course.lessons.map((lesson, idx) => {

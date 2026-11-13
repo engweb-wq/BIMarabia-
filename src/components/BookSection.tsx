@@ -1,9 +1,11 @@
 import { Bookmark, BookOpen } from 'lucide-react';
 import { BimBook } from '../data/catalog';
 import { BookCoverArtwork } from './CoverArtwork';
+import { HighlightText } from './HighlightText';
 
 interface BookSectionProps {
   books: BimBook[];
+  searchQuery: string;
   savedBookIds: string[];
   onToggleSaveBook: (id: string) => void;
   onSelectBook: (book: BimBook) => void;
@@ -11,6 +13,7 @@ interface BookSectionProps {
 
 export function BookSection({
   books,
+  searchQuery,
   savedBookIds,
   onToggleSaveBook,
   onSelectBook,
@@ -72,12 +75,12 @@ export function BookSection({
                         onClick={() => onSelectBook(book)}
                         className="text-right hover:text-[#0B4F8A] transition-colors cursor-pointer"
                       >
-                        {book.title}
+                        <HighlightText text={book.title} query={searchQuery} />
                       </button>
                     </h3>
 
                     <p className="mt-1.5 text-xs text-[#525866] leading-relaxed line-clamp-3">
-                      {book.subtitle}
+                      <HighlightText text={book.subtitle} query={searchQuery} />
                     </p>
 
                     <p className="mt-3 text-xs text-[#454B57]">

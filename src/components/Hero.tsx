@@ -1,5 +1,5 @@
-import { ArrowLeft, BookOpen, Play } from 'lucide-react';
-import { HERO_STUDIO_IMAGE } from '../data/catalog';
+import { ArrowLeft, BookOpen, ExternalLink, Play } from 'lucide-react';
+import { CHANNEL_URLS, HERO_STUDIO_IMAGE } from '../data/catalog';
 import { useState } from 'react';
 
 interface HeroProps {
@@ -18,20 +18,21 @@ export function Hero({ onBrowseVideos, onBrowseBooks }: HeroProps) {
           <div className="lg:col-span-6 flex flex-col justify-between py-2">
             <div>
               <p className="text-xs font-medium text-[#525866] tracking-wide mb-4">
-                المبادرة العربية لنمذجة معلومات البناء · بإشراف م. عمر سليم
+                مبادرة BIM Arabia · قناة م. عمر سليم (@omar_selim1) لقطاع الهندسة والتشييد (AEC)
               </p>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-[2.85rem] font-bold text-[#141923] leading-[1.22] text-balance max-w-xl">
-                المرجع العربي الشامل لعلوم البيم، الفيديوهات التطبيقية، والكتب الهندسية
+              <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold text-[#141923] leading-[1.24] text-balance max-w-xl">
+                المرجع العربي الشامل لتكنولوجيا البناء، نمذجة معلومات البناء، والكتب الهندسية
               </h1>
 
               <p className="mt-5 text-base sm:text-lg text-[#454B57] leading-relaxed max-w-xl">
-                منصة تعليمية ومكتبة معرفية مفتوحة تجمع سلاسل الشروحات المرئية، الكتب المؤلفة والمترجمة،
-                وأعداد مجلة بيم أرابيا لتأهيل المهندس العربي في إدارة مشاريع التشييد الرقمي وفق المعايير الدولية.
+                منصة تعليمية تجمع كل شروحات قناة <span className="font-mono text-sm text-[#0B4F8A]">@omar_selim1</span> وكتب
+                ومجلة بيم أرابيا، مصممة لرفع كفاءة المهندسين، تقديم حلول تقنية مباشرة في الأتمتة
+                والذكاء الاصطناعي التوليدي، ودعم التطوير المهني المستمر والتحضير للاعتمادات الدولية.
               </p>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-[#E5E2DA] flex flex-wrap items-center gap-4">
+            <div className="mt-8 pt-6 border-t border-[#E5E2DA] flex flex-wrap items-center gap-3.5">
               <button
                 type="button"
                 onClick={onBrowseVideos}
@@ -47,9 +48,19 @@ export function Hero({ onBrowseVideos, onBrowseBooks }: HeroProps) {
                 className="inline-flex items-center gap-2.5 px-5 py-3 text-sm font-semibold text-[#141923] bg-white border border-[#D4D0C5] hover:border-[#0B4F8A] hover:text-[#0B4F8A] rounded-lg transition-colors cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0B4F8A]"
               >
                 <BookOpen className="w-4 h-4" aria-hidden="true" />
-                <span>استكشف الكتب والمجلة</span>
+                <span>الكتب والمجلة</span>
                 <ArrowLeft className="w-4 h-4" aria-hidden="true" />
               </button>
+
+              <a
+                href={CHANNEL_URLS.subscribe}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-3 text-sm font-semibold text-[#0B4F8A] hover:underline underline-offset-4 whitespace-nowrap shrink-0"
+              >
+                <span>اشترك في القناة لمتابعة الشروحات الجديدة</span>
+                <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+              </a>
             </div>
           </div>
 
@@ -72,8 +83,15 @@ export function Hero({ onBrowseVideos, onBrowseBooks }: HeroProps) {
                 )}
               </div>
               <figcaption className="px-4 py-2.5 text-xs text-[#525866] bg-[#F6F4EE] border-t border-[#E5E2DA] flex items-center justify-between gap-4">
-                <span>أرشيف النمذجة الهندسية وإدارة المعلومات</span>
-                <span className="font-mono tabular-nums text-[11px] text-[#6B7280]">BIM · ISO 19650</span>
+                <span>أرشيف النمذجة الهندسية، الأتمتة، والذكاء الاصطناعي في العمارة</span>
+                <a
+                  href={CHANNEL_URLS.main}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-[11px] text-[#0B4F8A] hover:underline whitespace-nowrap shrink-0"
+                >
+                  youtube.com/@omar_selim1
+                </a>
               </figcaption>
             </figure>
           </div>
@@ -82,8 +100,8 @@ export function Hero({ onBrowseVideos, onBrowseBooks }: HeroProps) {
         {/* Full-Width 4-Column Architectural Index Strip */}
         <div className="mt-10 grid grid-cols-2 lg:grid-cols-4 border border-[#E5E2DA] bg-white rounded-xl divide-y lg:divide-y-0 lg:divide-x lg:divide-x-reverse divide-[#E5E2DA]">
           <div className="p-5">
-            <div className="font-mono text-2xl font-semibold text-[#141923] tabular-nums">190+</div>
-            <div className="mt-1 text-sm text-[#525866]">درس ومحاضرة فيديو منظمة</div>
+            <div className="font-mono text-2xl font-semibold text-[#141923] tabular-nums">208+</div>
+            <div className="mt-1 text-sm text-[#525866]">درساً ومحاضرة على القناة</div>
           </div>
           <div className="p-5">
             <div className="font-mono text-2xl font-semibold text-[#141923] tabular-nums">18</div>
@@ -94,8 +112,8 @@ export function Hero({ onBrowseVideos, onBrowseBooks }: HeroProps) {
             <div className="mt-1 text-sm text-[#525866]">عدداً من مجلة بيم أرابيا</div>
           </div>
           <div className="p-5">
-            <div className="font-mono text-2xl font-semibold text-[#141923] tabular-nums">100%</div>
-            <div className="mt-1 text-sm text-[#525866]">محتوى تعليمي عربي مجاني</div>
+            <div className="font-mono text-2xl font-semibold text-[#141923] tabular-nums">5</div>
+            <div className="mt-1 text-sm text-[#525866]">محاور تقنية من ISO حتى AI</div>
           </div>
         </div>
       </div>
