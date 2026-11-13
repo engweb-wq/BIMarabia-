@@ -1,0 +1,6 @@
+{
+  "name": "BIMarabia — بيم أرابيا",
+  "description": "البوابة العربية الشاملة لعلوم نمذجة معلومات البناء (BIM): مكتبة الكتب الهندسية، أعداد مجلة بيم أرابيا، وسلاسل الفيديوهات والدورات المجانية.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
